@@ -2,26 +2,32 @@ services:
   - type: web
     name: marvel-app
     runtime: docker
-    dockerfilePath: ./vendor/laravel/sail/runtimes/8.1/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: .
-    buildCommand: |
-      docker build -t marvel-app \
-        --build-arg WWWGROUP=1000 \
-        --build-arg WWWUSER=1000 \
-        -f ./vendor/laravel/sail/runtimes/8.1/Dockerfile .
     envVars:
-      - key: WWWUSER
-        value: "1000"
-      - key: LARAVEL_SAIL
-        value: "1"
-      - key: APP_PORT
-        value: "8000"
-      # [Include all your other environment variables]
       - key: APP_NAME
         value: Marvel
       - key: APP_ENV
         value: production
-      # ... (rest of your environment variables)
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://marvel-app.onrender.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: mysql
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: marvel_laravel
+      - key: DB_USERNAME
+        value: marvel_user
+      - key: DB_PASSWORD
+        sync: fromService
+        serviceName: mysql
 
   - type: pserv
     name: mysql
@@ -37,30 +43,7 @@ services:
         value: marvel_user
       - key: MYSQL_PASSWORD
         generateValue: true
-      - key: MYSQL_ALLOW_EMPTY_PASSWORD
-        value: "yes"
     disk:
       name: mysql_data
       mountPath: /var/lib/mysql
       sizeGB: 10
-
-  - type: pserv
-    name: redis
-    runtime: docker
-    envVars:
-      - key: image
-        value: redis:alpine
-    disk:
-      name: redis_data
-      mountPath: /data
-      sizeGB: 1
-
-  - type: pserv
-    name: mailhog
-    runtime: docker
-    envVars:
-      - key: image
-        value: mailhog/mailhog:latest
-      - key: MH_UI_WEB_PORT
-        value: "8025"
-        
