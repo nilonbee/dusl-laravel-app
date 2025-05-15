@@ -1,0 +1,222 @@
+#################################################################
+# Example render.yaml                                           #
+# Do not use this file directly! Consult it for reference only. #
+#################################################################
+
+previews:
+  generation: automatic # Enable preview environments
+
+# List all services *except* PostgreSQL databases here
+services:
+  - type: web
+    name: marvel-app
+    runtime: php
+    plan: standard
+    buildCommand: |
+      composer install
+      php artisan key:generate
+      php artisan migrate --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=8000
+    envVars:
+      - key: APP_NAME
+        value: Marvel
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false # You'll set this in Render Dashboard
+      - key: APP_VERSION
+        value: 6.8.0
+      - key: APP_SERVICE
+        value: marvel.test
+      - key: APP_NOTICE_DOMAIN
+        value: PIXER_
+      - key: DUMMY_DATA_PATH
+        value: pixer
+      - key: TRANSLATION_ENABLED
+        value: false
+      - key: DEFAULT_LANGUAGE
+        value: en
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: debug
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromDatabase:
+          name: marvel-db
+          property: host
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        fromDatabase:
+          name: marvel-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: marvel-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: marvel-db
+          property: password
+      - key: BROADCAST_DRIVER
+        value: pusher
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_LIFETIME
+        value: 120
+      - key: MEMCACHED_HOST
+        value: memcached
+      - key: LIGHTHOUSE_CACHE_ENABLE
+        value: false
+      - key: MAIL_MAILER
+        value: mailgun
+      - key: MAIL_HOST
+        value: smtp.mailgun.org
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_SECRET
+        sync: false
+      - key: MAIL_FROM_ADDRESS
+        sync: false
+      - key: MAIL_PORT
+        value: 1025
+      - key: MAIL_USERNAME
+        value: null
+      - key: MAIL_PASSWORD
+        value: null
+      - key: MAIL_ENCRYPTION
+        value: null
+      - key: ADMIN_EMAIL
+        value: support@example.com
+      - key: MEDIA_DISK
+        value: public
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        sync: false
+      - key: AWS_BUCKET
+        sync: false
+      - key: SHOP_URL
+        sync: false
+      - key: DASHBOARD_URL
+        sync: false
+      - key: ACTIVE_PAYMENT_GATEWAY
+        value: Stripe
+      - key: DEFAULT_CURRENCY
+        value: USD
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET_KEY
+        sync: false
+      - key: PAYPAL_CURRENCY
+        sync: false
+      - key: PAYPAL_NOTIFY_URL
+        sync: false
+      - key: PAYPAL_LOCALE
+        sync: false
+      - key: PAYPAL_VALIDATE_SSL
+        sync: false
+      - key: PAYPAL_MODE
+        sync: false
+      - key: PAYPAL_SANDBOX_CLIENT_ID
+        sync: false
+      - key: PAYPAL_SANDBOX_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_LIVE_CLIENT_ID
+        sync: false
+      - key: PAYPAL_LIVE_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: MOLLIE_KEY
+        sync: false
+      - key: MOLLIE_WEBHOOK_URL
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET_KEY
+        sync: false
+      - key: PAYSTACK_PUBLIC_KEY
+        sync: false
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      - key: PAYSTACK_PAYMENT_URL
+        value: https://api.paystack.co
+      - key: MERCHANT_EMAIL
+        sync: false
+      - key: BITPAY_IS_PRODUCTION
+        value: false
+      - key: BITPAY_KEY_STORAGE_PASSWORD
+        value: RandomPasswordForEncryption
+      - key: BITPAY_ENABLE_MERCHANT
+        value: true
+      - key: BITPAY_ENABLE_PAYOUT
+        value: false
+      - key: BITPAY_GENERATE_JSON_FILE
+        value: true
+      - key: BITPAY_GENERATE_YML_FILE
+        value: false
+      - key: COINBASE_API__KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+      - key: FACEBOOK_CLIENT_ID
+        sync: false
+      - key: FACEBOOK_CLIENT_SECRET
+        sync: false
+      - key: FACEBOOK_REDIRECT_URI
+        sync: false
+      - key: NEWSLETTER_API_KEY
+        sync: false
+      - key: NEWSLETTER_LIST_ID
+        sync: false
+      - key: ACTIVE_OTP_GATEWAY
+        value: twilio
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_VERIFICATION_SID
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+      - key: MESSAGEBIRD_API_KEY
+        sync: false
+      - key: MESSAGEBIRD_ORIGINATOR
+        value: Marvel
+      - key: PUSHER_ENABLED
+        value: false
+      - key: PUSHER_APP_ID
+        sync: false
+      - key: PUSHER_APP_KEY
+        sync: false
+      - key: PUSHER_APP_SECRET
+        sync: false
+      - key: PUSHER_APP_CLUSTER
+        value: ap2
+
+databases:
+  - name: marvel-db
+    databaseName: marvel_laravel
+    user: marvel_user
+    plan: free
