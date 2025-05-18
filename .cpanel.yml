@@ -1,0 +1,51 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/your_cpanel_username/public_html/
+    # Copy main application directories
+    - /bin/cp -R app $DEPLOYPATH
+    - /bin/cp -R bootstrap $DEPLOYPATH
+    - /bin/cp -R config $DEPLOYPATH
+    - /bin/cp -R database $DEPLOYPATH
+    - /bin/cp -R lang $DEPLOYPATH
+    - /bin/cp -R packages $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp -R resources $DEPLOYPATH
+    - /bin/cp -R routes $DEPLOYPATH
+    - /bin/cp -R storage $DEPLOYPATH
+    - /bin/cp -R tests $DEPLOYPATH
+    - /bin/cp -R vendor $DEPLOYPATH
+    
+    # Copy configuration and system files
+    - /bin/cp -R .env.example $DEPLOYPATH
+    - /bin/cp -R artisan $DEPLOYPATH
+    - /bin/cp -R composer.json $DEPLOYPATH
+    - /bin/cp -R composer.lock $DEPLOYPATH
+    - /bin/cp -R package.json $DEPLOYPATH
+    - /bin/cp -R phpunit.xml $DEPLOYPATH
+    - /bin/cp -R server.php $DEPLOYPATH
+    - /bin/cp -R webpack.mix.js $DEPLOYPATH
+    - /bin/cp -R yarn.lock $DEPLOYPATH
+    
+    # Copy git and editor configuration files
+    - /bin/cp -R .gitattributes $DEPLOYPATH
+    - /bin/cp -R .gitignore $DEPLOYPATH
+    - /bin/cp -R .editorconfig $DEPLOYPATH
+    - /bin/cp -R .styleci.yml $DEPLOYPATH
+    
+    # Set proper permissions
+    - chmod -R 755 $DEPLOYPATH
+    - chmod -R 775 $DEPLOYPATH/storage
+    - chmod -R 775 $DEPLOYPATH/bootstrap/cache
+    
+    # Create .env file from example
+    - cp $DEPLOYPATH/.env.example $DEPLOYPATH/.env
+    
+    # Run composer install
+    - cd $DEPLOYPATH && composer install --no-dev --optimize-autoloader
+    
+    # Run Laravel optimization commands
+    - cd $DEPLOYPATH && php artisan config:cache
+    - cd $DEPLOYPATH && php artisan route:cache
+    - cd $DEPLOYPATH && php artisan view:cache
+    - cd $DEPLOYPATH && php artisan storage:link
